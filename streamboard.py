@@ -87,28 +87,28 @@ if not filtered_data.empty:
 
     if statistics:
         with col1:
-            st.metric(label="Inscritos Inicial", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['initial'])
-            st.metric(label="Inscritos Final", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['final'])
+            st.metric(label="Inscritos periodo 2019-1", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['initial'])
+            st.metric(label="Inscritos periodo 2022-2", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['final'])
             st.metric(label="Variación Inscritos", value=f"{statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['perc_variation']:.2f}%", delta_color="off")
         with col2:
-            st.metric(label="Admitidos Inicial", value=statistics['TOTAL ADMITIDOS']['initial'])
-            st.metric(label="Admitidos Final", value=statistics['TOTAL ADMITIDOS']['final'])
+            st.metric(label="Admitidos periodo 2019-1", value=statistics['TOTAL ADMITIDOS']['initial'])
+            st.metric(label="Admitidos periodo 2019-1", value=statistics['TOTAL ADMITIDOS']['final'])
             st.metric(label="Variación Admitidos", value=f"{statistics['TOTAL ADMITIDOS']['perc_variation']:.2f}%", delta_color="off")
         with col3:
-            st.metric(label="Puntaje Corte Inicial", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
-            st.metric(label="Puntaje Corte Final", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
+            st.metric(label="Puntaje Corte periodo 2019-1", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
+            st.metric(label="Puntaje Corte periodo 2022-2", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
             st.metric(label="Variación Puntaje", value=f"{statistics['PUNTAJE DE CORTE']['perc_variation']:.2f}%", delta_color="off")
 
     # Plot for Total Applicants as a bar plot
-    fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos a lo Largo del Tiempo')
+    fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos por Periodo')
     st.plotly_chart(fig_applicants)
 
     # Plot for Total Admitted as a bar plot
-    fig_admitted = px.bar(filtered_data, x='Periodo', y='TOTAL ADMITIDOS', title='Total de Admitidos a lo Largo del Tiempo')
+    fig_admitted = px.bar(filtered_data, x='Periodo', y='TOTAL ADMITIDOS', title='Total de Admitidos por Periodo')
     st.plotly_chart(fig_admitted)
 
     # Plot for Cut-off Score as a bar plot
-    fig_cutoff = px.bar(filtered_data, x='Periodo', y='PUNTAJE DE CORTE', title='Puntaje de Corte Promedio a lo Largo del Tiempo')
+    fig_cutoff = px.bar(filtered_data, x='Periodo', y='PUNTAJE DE CORTE', title='Puntaje de Corte Promedio por Periodo')
     st.plotly_chart(fig_cutoff)
 
 else:
