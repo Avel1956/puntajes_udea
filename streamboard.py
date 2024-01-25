@@ -46,7 +46,8 @@ filtered_data = filtered_data.sort_values('Periodo')
 
 # Main page
 st.title('Tablero de Evolución del Programa')
-
+st.write('Datos de inscritos para examen de admisión (primera y segunda opción), admitidos y puntajes de corte, por sede y por programa')
+st.write('Fuente de los datos: http://tinyurl.com/puntudea')
 # Check if there is data to display
 if not filtered_data.empty:
     # Plot for Total Applicants as a bar plot
