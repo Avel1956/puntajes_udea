@@ -58,7 +58,11 @@ def calculate_variations(df, column_name, last_period_with_data=None):
     return initial_value, final_value, absolute_variation, percentage_variation
 
 def calculate_program_variations(df, sede):
-    program_variations = df[df['SEDE'] == sede].groupby('NOMBRE PROGRAMA')['PUNTAJE DE CORTE'].agg(['first', 'last'])
+    # Filter the data for the given SEDE
+    sede_data = df[df['SEDE'] == sede]
+    # Calculate the first and last Puntaje de Corte for each program within the SEDE
+    program_variations = sede_data.groupby('NOMBRE PROGRAMA')['PUNTAJE DE CORTE'].agg(['first', 'last'])
+    # Calculate the variation and sort the programs
     program_variations['Variation'] = program_variations['last'] - program_variations['first']
     program_variations = program_variations.sort_values(by='Variation', ascending=False)
     return program_variations
@@ -98,7 +102,7 @@ if not filtered_data.empty:
             st.metric(label="Variación Inscritos", value=f"{statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['perc_variation']:.2f}%", delta_color="off")
         with col2:
             st.metric(label="Admitidos periodo 2019-1", value=statistics['TOTAL ADMITIDOS']['initial'])
-            st.metric(label="Admitidos periodo 2019-1", value=statistics['TOTAL ADMITIDOS']['final'])
+            st.metric(label="Admitidos periodo 2022-2", value=statistics['TOTAL ADMITIDOS']['final'])
             st.metric(label="Variación Admitidos", value=f"{statistics['TOTAL ADMITIDOS']['perc_variation']:.2f}%", delta_color="off")
         with col3:
             st.metric(label="Puntaje Corte periodo 2019-1", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
@@ -106,11 +110,11 @@ if not filtered_data.empty:
             st.metric(label="Variación Puntaje", value=f"{statistics['PUNTAJE DE CORTE']['perc_variation']:.2f}%", delta_color="off")
 
     if selected_campus != 'TODOS':
-        program_variations = calculate_program_variations(filtered_data, selected_campus)
+        program_variations = calculate_program_variations(data, selected_campus)
         top_five = program_variations.nlargest(5, 'Variation')
         bottom_five = program_variations.nsmallest(5, 'Variation')
 
-        st.markdown("## Ranking de Programas por Variación de Puntaje de Corte")
+        st.markdown("## Ranking de Programas por Variación de Puntaje de Corte en " + selected_campus)
         st.markdown("### Top 5 Programas con Mayor Aumento")
         for program in top_five.index:
             st.markdown(f"- {program}: {top_five.loc[program, 'Variation']:.2f} puntos")
