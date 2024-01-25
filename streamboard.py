@@ -57,10 +57,11 @@ def calculate_variations(df, column_name, last_period_with_data=None):
     percentage_variation = ((final_value - initial_value) / initial_value) * 100 if initial_value else 0
     return initial_value, final_value, absolute_variation, percentage_variation
 
-def calculate_program_variations(df):
-    program_variations = df.groupby('NOMBRE PROGRAMA')['PUNTAJE DE CORTE'].agg(['first', 'last'])
+def calculate_program_variations(df, sede):
+    program_variations = df[df['SEDE'] == sede].groupby('NOMBRE PROGRAMA')['PUNTAJE DE CORTE'].agg(['first', 'last'])
     program_variations['Variation'] = program_variations['last'] - program_variations['first']
-    return program_variations['Variation'].sort_values()
+    program_variations = program_variations.sort_values(by='Variation', ascending=False)
+    return program_variations
 
 # Último periodo con datos para inscritos y admitidos
 last_period_with_data = pd.to_datetime('2022-06')  # Assuming '2022-2' corresponds to June 2022
@@ -103,20 +104,20 @@ if not filtered_data.empty:
             st.metric(label="Puntaje Corte periodo 2019-1", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
             st.metric(label="Puntaje Corte periodo 2022-2", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
             st.metric(label="Variación Puntaje", value=f"{statistics['PUNTAJE DE CORTE']['perc_variation']:.2f}%", delta_color="off")
-            
-        if selected_campus != 'TODOS':
-                program_variations = calculate_program_variations(filtered_data)
-                top_five = program_variations.nlargest(5)
-                bottom_five = program_variations.nsmallest(5)
 
-                st.markdown("## Ranking de Programas por Variación de Puntaje de Corte")
-                st.markdown("### Cinco Programas con Mayor Variación Positiva")
-                for program in top_five.index:
-                    st.markdown(f"- {program}: {top_five[program]:.2f} puntos")
-                
-                st.markdown("### Cinco Programas con Mayor Variación Negativa")
-                for program in bottom_five.index:
-                    st.markdown(f"- {program}: {bottom_five[program]:.2f} puntos")
+    if selected_campus != 'TODOS':
+        program_variations = calculate_program_variations(filtered_data, selected_campus)
+        top_five = program_variations.nlargest(5, 'Variation')
+        bottom_five = program_variations.nsmallest(5, 'Variation')
+
+        st.markdown("## Ranking de Programas por Variación de Puntaje de Corte")
+        st.markdown("### Top 5 Programas con Mayor Aumento")
+        for program in top_five.index:
+            st.markdown(f"- {program}: {top_five.loc[program, 'Variation']:.2f} puntos")
+
+        st.markdown("### Bottom 5 Programas con Mayor Disminución")
+        for program in bottom_five.index:
+            st.markdown(f"- {program}: {bottom_five.loc[program, 'Variation']:.2f} puntos")
 
     # Plot for Total Applicants as a bar plot
     fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos por Periodo')
