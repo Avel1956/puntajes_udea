@@ -50,22 +50,16 @@ st.write('Datos de inscritos para examen de admisión (primera y segunda opción
 st.write('Fuente de los datos: http://tinyurl.com/puntudea')
 # Check if there is data to display
 if not filtered_data.empty:
-   # Plot for Total Applicants as a bar plot with a trend line
+    # Plot for Total Applicants as a bar plot
     fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos a lo Largo del Tiempo')
-    # Add a trend line
-    fig_applicants.add_traces(go.Scatter(x=filtered_data['Periodo'], y=filtered_data['TOTAL INSCRITOS 1 Y 2 OPCIÓN'].rolling(window=2).mean(), mode='lines', name='Trend'))
     st.plotly_chart(fig_applicants)
 
-    # Plot for Total Admitted as a bar plot with a trend line
+    # Plot for Total Admitted as a bar plot
     fig_admitted = px.bar(filtered_data, x='Periodo', y='TOTAL ADMITIDOS', title='Total de Admitidos a lo Largo del Tiempo')
-    # Add a trend line
-    fig_admitted.add_traces(go.Scatter(x=filtered_data['Periodo'], y=filtered_data['TOTAL ADMITIDOS'].rolling(window=2).mean(), mode='lines', name='Trend'))
     st.plotly_chart(fig_admitted)
 
-    # Plot for Cut-off Score as a bar plot with a trend line
+    # Plot for Cut-off Score as a bar plot
     fig_cutoff = px.bar(filtered_data, x='Periodo', y='PUNTAJE DE CORTE', title='Puntaje de Corte Promedio a lo Largo del Tiempo')
-    # Add a trend line
-    fig_cutoff.add_traces(go.Scatter(x=filtered_data['Periodo'], y=filtered_data['PUNTAJE DE CORTE'].rolling(window=2).mean(), mode='lines', name='Trend'))
     st.plotly_chart(fig_cutoff)
 
 else:
