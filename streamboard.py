@@ -46,8 +46,11 @@ if selected_program == 'TODOS':
 filtered_data = filtered_data.sort_values('Periodo')
 
 def calculate_variations(df, column_name):
-    initial_value = df[column_name].iloc[0]
-    final_value = df[column_name].iloc[-1]
+    non_null_data = df[df[column_name].notna()]
+    if non_null_data.empty:
+        return None, None, None, None
+    initial_value = non_null_data[column_name].iloc[0]
+    final_value = non_null_data[column_name].iloc[-1]
     absolute_variation = final_value - initial_value
     percentage_variation = ((final_value - initial_value) / initial_value) * 100 if initial_value else 0
     return initial_value, final_value, absolute_variation, percentage_variation
@@ -58,15 +61,30 @@ st.write('Datos de inscritos para examen de admisión (primera y segunda opción
 st.write('Fuente de los datos: http://tinyurl.com/puntudea')
 # Check if there is data to display
 if not filtered_data.empty:
-    st.markdown("## Estadísticas Generales")
+    col1, col2, col3 = st.columns(3)
+    statistics = {}
 
     for parameter in ['TOTAL INSCRITOS 1 Y 2 OPCIÓN', 'TOTAL ADMITIDOS', 'PUNTAJE DE CORTE']:
         initial, final, abs_variation, perc_variation = calculate_variations(filtered_data, parameter)
-        st.markdown(f"**{parameter.replace('_', ' ')}:**")
-        st.markdown(f"- Valor inicial: {initial}")
-        st.markdown(f"- Valor final: {final}")
-        st.markdown(f"- Variación absoluta: {abs_variation}")
-        st.markdown(f"- Variación porcentual: {perc_variation:.2f}%")
+        if initial is not None:
+            statistics[parameter] = {
+                "initial": initial,
+                "final": final,
+                "abs_variation": abs_variation,
+                "perc_variation": perc_variation
+            }
+
+    if statistics:
+        with col1:
+            st.metric(label="Inscritos Inicial", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['initial'])
+            st.metric(label="Inscritos Final", value=statistics['TOTAL INSCRITOS 1 Y 2 OPCIÓN']['final'])
+        with col2:
+            st.metric(label="Admitidos Inicial", value=statistics['TOTAL ADMITIDOS']['initial'])
+            st.metric(label="Admitidos Final", value=statistics['TOTAL ADMITIDOS']['final'])
+        with col3:
+            st.metric(label="Puntaje Corte Inicial", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
+            st.metric(label="Puntaje Corte Final", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
+
     # Plot for Total Applicants as a bar plot
     fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos a lo Largo del Tiempo')
     st.plotly_chart(fig_applicants)
