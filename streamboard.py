@@ -45,8 +45,10 @@ if selected_program == 'TODOS':
 # Sort the filtered data by 'Periodo'
 filtered_data = filtered_data.sort_values('Periodo')
 
-def calculate_variations(df, column_name):
+def calculate_variations(df, column_name, last_period_with_data=None):
     non_null_data = df[df[column_name].notna()]
+    if last_period_with_data:
+        non_null_data = non_null_data[non_null_data['Periodo'] <= last_period_with_data]
     if non_null_data.empty:
         return None, None, None, None
     initial_value = non_null_data[column_name].iloc[0]
@@ -54,6 +56,9 @@ def calculate_variations(df, column_name):
     absolute_variation = final_value - initial_value
     percentage_variation = ((final_value - initial_value) / initial_value) * 100 if initial_value else 0
     return initial_value, final_value, absolute_variation, percentage_variation
+
+# Último periodo con datos para inscritos y admitidos
+last_period_with_data = pd.to_datetime('2022-06')  # Assuming '2022-2' corresponds to June 2022
 
 # Main page
 st.title('Tablero de Evolución del Programa')
@@ -64,8 +69,14 @@ if not filtered_data.empty:
     col1, col2, col3 = st.columns(3)
     statistics = {}
 
-    for parameter in ['TOTAL INSCRITOS 1 Y 2 OPCIÓN', 'TOTAL ADMITIDOS', 'PUNTAJE DE CORTE']:
-        initial, final, abs_variation, perc_variation = calculate_variations(filtered_data, parameter)
+    parameters = {
+        'TOTAL INSCRITOS 1 Y 2 OPCIÓN': last_period_with_data,
+        'TOTAL ADMITIDOS': last_period_with_data,
+        'PUNTAJE DE CORTE': None  # Assuming we have all data for 'PUNTAJE DE CORTE'
+    }
+
+    for parameter, last_period in parameters.items():
+        initial, final, abs_variation, perc_variation = calculate_variations(filtered_data, parameter, last_period)
         if initial is not None:
             statistics[parameter] = {
                 "initial": initial,
