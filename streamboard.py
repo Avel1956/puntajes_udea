@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from plotly import graph_objs as go
 
 # Load your data
 @st.cache_data
@@ -44,12 +45,28 @@ if selected_program == 'TODOS':
 # Sort the filtered data by 'Periodo'
 filtered_data = filtered_data.sort_values('Periodo')
 
+def calculate_variations(df, column_name):
+    initial_value = df[column_name].iloc[0]
+    final_value = df[column_name].iloc[-1]
+    absolute_variation = final_value - initial_value
+    percentage_variation = ((final_value - initial_value) / initial_value) * 100 if initial_value else 0
+    return initial_value, final_value, absolute_variation, percentage_variation
+
 # Main page
 st.title('Tablero de Evolución del Programa')
 st.write('Datos de inscritos para examen de admisión (primera y segunda opción), admitidos y puntajes de corte, por sede y por programa')
 st.write('Fuente de los datos: http://tinyurl.com/puntudea')
 # Check if there is data to display
 if not filtered_data.empty:
+    st.markdown("## Estadísticas Generales")
+
+    for parameter in ['TOTAL INSCRITOS 1 Y 2 OPCIÓN', 'TOTAL ADMITIDOS', 'PUNTAJE DE CORTE']:
+        initial, final, abs_variation, perc_variation = calculate_variations(filtered_data, parameter)
+        st.markdown(f"**{parameter.replace('_', ' ')}:**")
+        st.markdown(f"- Valor inicial: {initial}")
+        st.markdown(f"- Valor final: {final}")
+        st.markdown(f"- Variación absoluta: {abs_variation}")
+        st.markdown(f"- Variación porcentual: {perc_variation:.2f}%")
     # Plot for Total Applicants as a bar plot
     fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos a lo Largo del Tiempo')
     st.plotly_chart(fig_applicants)
