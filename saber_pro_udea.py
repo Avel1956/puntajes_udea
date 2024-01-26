@@ -8,7 +8,7 @@ def load_data():
     # Additional data cleaning can be added here if needed
     return df
 
-def show_saber_pro_udea_page():
+def show_saberpro_udea_page():
     st.title('Evolución de Saber Pro en el tiempo')
 
     df = load_data()
