@@ -37,5 +37,4 @@ def show_saber_pro_udea_page():
     else:
         st.write("No data available for the selected filters.")
 
-if __name__ == '__main__':
-    show_saber_pro_udea_page()
+
