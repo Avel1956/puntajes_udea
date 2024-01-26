@@ -5,7 +5,6 @@ from plotly import graph_objs as go
 
 def load_data():
     df = pd.read_excel('output/saber_pro_udea.xlsx')
-    # Additional data cleaning can be added here if needed
     return df
 
 def show_saberpro_udea_page():
@@ -13,13 +12,12 @@ def show_saberpro_udea_page():
 
     df = load_data()
 
-    # Extract year from PERIODO and create a new column 'Year'
     df['Year'] = df['PERIODO'].astype(str).str[:4]
 
     # Filters
     st.sidebar.header('Filters')
     all_institutions = ['Todos'] + list(df['INST_NOMBRE_INSTITUCION'].unique())
-    selected_institution = st.sidebar.selectbox('Select Institution', all_institutions)
+    selected_institution = st.sidebar.selectbox('Seleccione institución', all_institutions)
 
     if selected_institution != 'Todos':
         df = df[df['INST_NOMBRE_INSTITUCION'] == selected_institution]
@@ -27,27 +25,39 @@ def show_saberpro_udea_page():
     else:
         programs = ['Todos'] + list(df['ESTU_PRGM_ACADEMICO'].unique())
 
-    selected_program = st.sidebar.selectbox('Select Program', programs)
+    selected_program = st.sidebar.selectbox('Seleccionar programa', programs)
 
     if selected_program != 'Todos':
         df = df[df['ESTU_PRGM_ACADEMICO'] == selected_program]
 
-    # Group by Year and calculate mean score
-    df_grouped = df.groupby('Year')['MOD_RAZONA_CUANTITAT_PUNT'].mean().reset_index()
+    # Explicitly specify MOD columns
+    mod_columns = [
+        'MOD_RAZONA_CUANTITAT_PUNT', 'MOD_COMUNI_ESCRITA_PUNT', 'MOD_COMUNI_ESCRITA_DESEM',
+        'MOD_LECTURA_CRITICA_PUNT', 'MOD_INGLES_PUNT', 'MOD_COMPETEN_CIUDADA_PUNT'
+    ]
+
+    # Group by year and calculate mean for each MOD column
+    df_grouped = df.groupby('Year')[mod_columns].mean().reset_index()
 
     # Plotting
     if not df.empty:
-        # Create bar plot
+        # Create figure
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df_grouped['Year'], y=df_grouped['MOD_RAZONA_CUANTITAT_PUNT'], name='Average Score'))
-        
-        # Add line plot for variation
-        fig.add_trace(go.Scatter(x=df_grouped['Year'], y=df_grouped['MOD_RAZONA_CUANTITAT_PUNT'], 
-                                 mode='lines+markers', name='Trend'))
 
-        fig.update_layout(title='Evolution of Scores Over Time', xaxis_title='Year', yaxis_title='Average Score')
+        # Add a trace for each MOD column
+        for col in mod_columns:
+            fig.add_trace(go.Scatter(x=df_grouped['Year'], y=df_grouped[col], 
+                                     mode='lines+markers', name=col))
+
+        fig.update_layout(title='Evolución de puntajes', xaxis_title='Año', yaxis_title='Promedio')
         st.plotly_chart(fig)
+
+        # Display statistics for categorical data
+        categorical_stats = df.describe(include=['O'])
+        st.write("Statistics for categorical data:")
+        st.dataframe(categorical_stats)
+
     else:
         st.write("No data available for the selected filters.")
 
-# Remove the main check if this script is not intended to be run as a standalone Streamlit app
+# ... [rest of your code, if any] ...
