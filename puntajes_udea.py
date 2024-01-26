@@ -107,7 +107,7 @@ def show_puntajes_udea_page():
                 st.metric(label="Variación Admitidos", value=f"{statistics['TOTAL ADMITIDOS']['perc_variation']:.2f}%", delta_color="off")
             with col3:
                 st.metric(label="Puntaje Corte periodo 2019-1", value=f"{statistics['PUNTAJE DE CORTE']['initial']:.2f}")
-                st.metric(label="Puntaje Corte periodo 2022-2", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
+                st.metric(label="Puntaje Corte periodo 2024-1", value=f"{statistics['PUNTAJE DE CORTE']['final']:.2f}")
                 st.metric(label="Variación Puntaje", value=f"{statistics['PUNTAJE DE CORTE']['perc_variation']:.2f}%", delta_color="off")
 
         if selected_campus != 'TODOS':
