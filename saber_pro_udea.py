@@ -1,17 +1,20 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from plotly import graph_objs as go
 
 def load_data():
-    # Load and preprocess the data
     df = pd.read_excel('output/saber_pro_udea.xlsx')
-    # Consider adding data cleaning and aggregation logic here
+    # Additional data cleaning can be added here if needed
     return df
 
-def show_saberpro_udea_page():
+def show_saber_pro_udea_page():
     st.title('Evolución de Saber Pro en el tiempo')
 
     df = load_data()
+
+    # Extract year from PERIODO and create a new column 'Year'
+    df['Year'] = df['PERIODO'].astype(str).str[:4]
 
     # Filters
     st.sidebar.header('Filters')
@@ -29,12 +32,22 @@ def show_saberpro_udea_page():
     if selected_program != 'Todos':
         df = df[df['ESTU_PRGM_ACADEMICO'] == selected_program]
 
-    # Assuming 'MOD_RAZONA_CUANTITAT_PUNT' as the score to visualize
+    # Group by Year and calculate mean score
+    df_grouped = df.groupby('Year')['MOD_RAZONA_CUANTITAT_PUNT'].mean().reset_index()
+
+    # Plotting
     if not df.empty:
-        df_grouped = df.groupby('PERIODO')['MOD_RAZONA_CUANTITAT_PUNT'].mean().reset_index()
-        fig = px.line(df_grouped, x='PERIODO', y='MOD_RAZONA_CUANTITAT_PUNT', title='Evolution of Scores Over Time')
+        # Create bar plot
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=df_grouped['Year'], y=df_grouped['MOD_RAZONA_CUANTITAT_PUNT'], name='Average Score'))
+        
+        # Add line plot for variation
+        fig.add_trace(go.Scatter(x=df_grouped['Year'], y=df_grouped['MOD_RAZONA_CUANTITAT_PUNT'], 
+                                 mode='lines+markers', name='Trend'))
+
+        fig.update_layout(title='Evolution of Scores Over Time', xaxis_title='Year', yaxis_title='Average Score')
         st.plotly_chart(fig)
     else:
         st.write("No data available for the selected filters.")
 
-
+# Remove the main check if this script is not intended to be run as a standalone Streamlit app
