@@ -8,7 +8,7 @@ def load_data():
     # Consider adding data cleaning and aggregation logic here
     return df
 
-def show_saber_pro_udea_page():
+def show_saberpro_udea_page():
     st.title('Evolución de Saber Pro en el tiempo')
 
     df = load_data()
