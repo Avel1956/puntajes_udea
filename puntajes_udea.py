@@ -4,6 +4,32 @@ import plotly.express as px
 from plotly import graph_objs as go
 
 def show_puntajes_udea_page():
+    st.set_page_config(
+        page_title="UdeA Dashboard",
+        page_icon=":bar_chart:",
+        layout="wide",
+        menu_items={
+            'Get Help': 'http://tinyurl.com/puntudea',
+            'Report a bug': None,
+            'About': "# This is a dashboard to visualize UdeA's program data."
+        }
+    )
+
+    # Define the color palette
+    primary_color = "#34A853"  # Replace with the actual color from your image
+    secondary_color = "#FFFFFF"  # Replace with the actual color from your image
+    background_color = "#F5F5F5"  # Replace with a light color from your image
+    text_color = "#262730"  # Replace with the text color from your image
+
+    # Custom styles for Plotly charts
+    def customize_chart(fig):
+        fig.update_layout(
+            paper_bgcolor=background_color,
+            plot_bgcolor=background_color,
+            font_color=text_color
+        )
+        return fig
+
     # Load your data
     @st.cache_data
     def load_data():
@@ -72,9 +98,10 @@ def show_puntajes_udea_page():
     last_period_with_data = pd.to_datetime('2022-06')  # Assuming '2022-2' corresponds to June 2022
 
     # Main page
-    st.title('Tablero de Evolución del Programa')
-    st.write('Datos de inscritos para examen de admisión (primera y segunda opción), admitidos y puntajes de corte, por sede y por programa')
-    st.write('Fuente de los datos: http://tinyurl.com/puntudea')
+    st.markdown(f"<h1 style='color: {primary_color};'>Tablero de Evolución del Programa</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {text_color};'>Datos de inscritos para examen de admisión (primera y segunda opción), admitidos y puntajes de corte, por sede y por programa</h2>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color: {text_color};'>Fuente de los datos: <a href='http://tinyurl.com/puntudea' target='_blank'>UdeA Data Source</a></p>", unsafe_allow_html=True)
+
     # Check if there is data to display
     if not filtered_data.empty:
         col1, col2, col3 = st.columns(3)
@@ -125,15 +152,13 @@ def show_puntajes_udea_page():
                 st.markdown(f"- {program}: {bottom_five.loc[program, 'Variation']:.2f} puntos")
 
         # Plot for Total Applicants as a bar plot
-        fig_applicants = px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos por Periodo')
+        fig_applicants = customize_chart(px.bar(filtered_data, x='Periodo', y='TOTAL INSCRITOS 1 Y 2 OPCIÓN', title='Total de Inscritos por Periodo'))
         st.plotly_chart(fig_applicants)
 
-        # Plot for Total Admitted as a bar plot
-        fig_admitted = px.bar(filtered_data, x='Periodo', y='TOTAL ADMITIDOS', title='Total de Admitidos por Periodo')
+        fig_admitted = customize_chart(px.bar(filtered_data, x='Periodo', y='TOTAL ADMITIDOS', title='Total de Admitidos por Periodo'))
         st.plotly_chart(fig_admitted)
 
-        # Plot for Cut-off Score as a bar plot
-        fig_cutoff = px.bar(filtered_data, x='Periodo', y='PUNTAJE DE CORTE', title='Puntaje de Corte Promedio por Periodo')
+        fig_cutoff = customize_chart(px.bar(filtered_data, x='Periodo', y='PUNTAJE DE CORTE', title='Puntaje de Corte Promedio por Periodo'))
         st.plotly_chart(fig_cutoff)
 
     else:
