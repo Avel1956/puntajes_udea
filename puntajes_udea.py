@@ -3,37 +3,39 @@ import pandas as pd
 import plotly.express as px
 from plotly import graph_objs as go
 
-def show_puntajes_udea_page():
-    st.set_page_config(
-        page_title="UdeA Dashboard",
-        page_icon=":bar_chart:",
-        layout="wide",
-        menu_items={
-            'Get Help': 'http://tinyurl.com/puntudea',
-            'Report a bug': None,
-            'About': "# This is a dashboard to visualize UdeA's program data."
-        }
+st.set_page_config(
+    page_title="UdeA Dashboard",
+    page_icon=":bar_chart:",
+    layout="wide",
+    menu_items={
+        'Get Help': 'http://tinyurl.com/puntudea',
+        'Report a bug': None,
+        'About': "# This is a dashboard to visualize UdeA's program data."
+    }
+)
+
+# Define the color palette
+primary_color = "#34A853"  
+secondary_color = "#FFFFFF"  
+background_color = "#F5F5F5"  
+text_color = "#262730"  
+
+# Custom styles for Plotly charts
+def customize_chart(fig):
+    fig.update_layout(
+        paper_bgcolor=background_color,
+        plot_bgcolor=background_color,
+        font_color=text_color
     )
+    return fig
 
-    # Define the color palette
-    primary_color = "#34A853"  # Replace with the actual color from your image
-    secondary_color = "#FFFFFF"  # Replace with the actual color from your image
-    background_color = "#F5F5F5"  # Replace with a light color from your image
-    text_color = "#262730"  # Replace with the text color from your image
+def show_puntajes_udea_page():
 
-    # Custom styles for Plotly charts
-    def customize_chart(fig):
-        fig.update_layout(
-            paper_bgcolor=background_color,
-            plot_bgcolor=background_color,
-            font_color=text_color
-        )
-        return fig
 
-    # Load your data
+    # Load  data
     @st.cache_data
     def load_data():
-        # Adjust the path to your file
+        # Adjust the path to  file
         df = pd.read_excel('output/consolidated_data.xlsx', sheet_name='Sheet1')
         # Convert 'Periodo' to a format that distinguishes semesters
         df['Periodo'] = df['Periodo'].apply(lambda x: '{}-{}'.format(x.split('-')[0], '01' if x.endswith('1') else '06'))
