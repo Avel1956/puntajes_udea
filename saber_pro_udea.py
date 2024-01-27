@@ -54,10 +54,10 @@ def show_saberpro_udea_page():
 
         # Display statistics for categorical data
         categorical_stats = df.describe(include=['O'])
-        st.write("Statistics for categorical data:")
+        st.write("EStadísticas para datos categóricos:")
         st.dataframe(categorical_stats)
 
     else:
-        st.write("No data available for the selected filters.")
+        st.write("Ningún dato satisface los filtros seleccionados.")
 
 # ... [rest of your code, if any] ...

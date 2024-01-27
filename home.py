@@ -19,7 +19,19 @@ secondary_color = "#FFFFFF"
 background_color = "#F5F5F5"  
 text_color = "#262730"  
 
+# The URL of the website you want to link to
+website_url = "https://www.nataliarectora.com/"
+
+# The path to your image (this can also be a URL)
+image_path = "images/nrect.png"
+
+# Use HTML to create the hyperlink with an image
+link = f'<a href="{website_url}" target="_blank"><img src="{image_path}" alt="Natalia rectoría" style="width:100%;"></a>'
+
+# Place the link with the image in the sidebar
+
 def main():
+    st.sidebar.markdown(link, unsafe_allow_html=True)
     st.sidebar.title("Navegación")
     page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA"])
 
