@@ -3,22 +3,13 @@ import pandas as pd
 import plotly.express as px
 from plotly import graph_objs as go
 
-st.set_page_config(
-    page_title="UdeA Dashboard",
-    page_icon=":bar_chart:",
-    layout="wide",
-    menu_items={
-        'Get Help': 'http://tinyurl.com/puntudea',
-        'Report a bug': None,
-        'About': "# This is a dashboard to visualize UdeA's program data."
-    }
-)
 
 # Define the color palette
 primary_color = "#34A853"  
 secondary_color = "#FFFFFF"  
 background_color = "#F5F5F5"  
 text_color = "#262730"  
+
 
 # Custom styles for Plotly charts
 def customize_chart(fig):
