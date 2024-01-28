@@ -54,9 +54,8 @@ def analisis_datos(data):
 
     st.write("""
     ### Nuestro Compromiso Continuo
-    A pesar de estos avances, reconocemos que aún hay trabajo por hacer. Nos enfocamos en mejorar nuestras políticas y programas para asegurar que cada estudiante, sin importar sus desafíos individuales, tenga acceso a una educación de calidad y un entorno de aprendizaje enriquecedor.
+    A pesar de estos avances, reconocemos que aún hay trabajo por hacer. Nos enfocaremos en mejorar nuestras políticas y programas de inclusión para asegurar que cada estudiante, sin importar sus desafíos individuales, tenga acceso a una educación de calidad y un entorno de aprendizaje enriquecedor.
 
-    ### Llamado a la Acción
     Te invitamos a unirte a nosotros en este esfuerzo. Tu apoyo y participación son cruciales para construir una comunidad académica más inclusiva.
     """)
 
