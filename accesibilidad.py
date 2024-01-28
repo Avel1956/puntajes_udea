@@ -12,6 +12,54 @@ def personalizar_grafico(fig):
     # Personalizaciones adicionales aquí
     return fig
 
+def calcular_estadisticas(data):
+    # Calculando estadísticas clave
+    resumen = {}
+    for columna in data.columns[1:-1]:  # Excluyendo 'SEMESTRE' y 'TOTAL'
+        total_inicial = data[columna].iloc[0]
+        total_final = data[columna].iloc[-1]
+        cambio = ((total_final - total_inicial) / total_inicial) * 100
+
+        resumen[columna] = {
+            'total_inicial': total_inicial,
+            'total_final': total_final,
+            'cambio': cambio
+        }
+
+    total_estudiantes_inicial = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[0]
+    total_estudiantes_final = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[-1]
+    cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
+
+    return resumen, total_estudiantes_inicial, total_estudiantes_final, cambio_total
+
+def analisis_datos(data):
+    # Comentario del análisi del dataset
+    resumen, total_ini, total_fin, cambio_total = calcular_estadisticas(data)
+
+    st.write("""
+    ## Análisis de los Datos de Discapacidad Estudiantil
+
+    En la Universidad de Antioquia, estamos comprometidos con la inclusión y el apoyo a todos nuestros estudiantes. El análisis de los datos de matriculación de estudiantes con discapacidades a lo largo de los años nos ofrece una visión valiosa sobre nuestro progreso y las áreas en las que aún podemos mejorar.
+
+    ### Progreso a Través de los Años
+    Desde el inicio del registro hasta la fecha, el total de estudiantes matriculados con discapacidad ha aumentado de {} a {}, lo que representa un cambio positivo del {:.2f}%. Este aumento demuestra el impacto de nuestras políticas inclusivas y el éxito de nuestros programas de apoyo.
+    """.format(total_ini, total_fin, cambio_total))
+
+    for discapacidad, valores in resumen.items():
+        st.write("""
+        En el caso de los estudiantes con {}, hemos visto un cambio del {:.2f}%, pasando de {} estudiantes a {}. Esto refleja nuestro compromiso continuo con la inclusión y el apoyo a esta comunidad.
+        """.format(discapacidad, valores['cambio'], valores['total_inicial'], valores['total_final']))
+
+    st.write("""
+    ### Nuestro Compromiso Continuo
+    A pesar de estos avances, reconocemos que aún hay trabajo por hacer. Nos enfocamos en mejorar nuestras políticas y programas para asegurar que cada estudiante, sin importar sus desafíos individuales, tenga acceso a una educación de calidad y un entorno de aprendizaje enriquecedor.
+
+    ### Llamado a la Acción
+    Te invitamos a unirte a nosotros en este esfuerzo. Tu apoyo y participación son cruciales para construir una comunidad académica más inclusiva.
+
+    A continuación, presentamos un desglose detallado de los datos de discapacidad estudiantil a lo largo de los años, reflejando nuestro camino hacia un futuro más inclusivo.
+    """)
+
 def crear_grafico_baja_vision(data):
     # Gráfico de alta contraste para 'Baja Visión'
     fig = px.bar(data, x='SEMESTRE', y='BAJA VISIÓN', color='BAJA VISIÓN', color_continuous_scale=px.colors.sequential.Viridis)
