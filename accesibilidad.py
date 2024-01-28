@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 def cargar_datos():
     # Carga aquí tus datos
-    data = pd.read_excel('ruta_a_tu_archivo_excel.xlsx')
+    data = pd.read_excel('output\\access.xlsx')
     return data
 
 def personalizar_grafico(fig):
