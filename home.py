@@ -33,8 +33,8 @@ def imagen_sidebar():
 
         st.sidebar.markdown(
             f"""
-            <div style="display:table;margin-top:-20%;margin-left:20%;">
-                <img src="data:image/png;base64,{data}" width="200">
+            <div style="display:flex;justify-content:center;">
+                <img src="data:image/png;base64,{data}" style="width:100%;">
             </div>
             """,
             unsafe_allow_html=True,
