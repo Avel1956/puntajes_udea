@@ -14,41 +14,43 @@ def personalizar_grafico(fig):
 
 def calcular_estadisticas(data):
     # Calculando estadísticas clave
-    resumen = {}
+    estadisticas = []
     for columna in data.columns[1:-1]:  # Excluyendo 'SEMESTRE' y 'TOTAL'
         total_inicial = data[columna].iloc[0]
         total_final = data[columna].iloc[-1]
         cambio = ((total_final - total_inicial) / total_inicial) * 100
 
-        resumen[columna] = {
-            'total_inicial': total_inicial,
-            'total_final': total_final,
-            'cambio': cambio
-        }
+        estadisticas.append({
+            'Discapacidad': columna,
+            'Total Inicial': total_inicial,
+            'Total Final': total_final,
+            'Cambio (%)': round(cambio, 2)
+        })
 
     total_estudiantes_inicial = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[0]
     total_estudiantes_final = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[-1]
     cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
 
-    return resumen, total_estudiantes_inicial, total_estudiantes_final, cambio_total
+    estadisticas.append({
+        'Discapacidad': 'Total Estudiantes con Discapacidad',
+        'Total Inicial': total_estudiantes_inicial,
+        'Total Final': total_estudiantes_final,
+        'Cambio (%)': round(cambio_total, 2)
+    })
+
+    return pd.DataFrame(estadisticas)
 
 def analisis_datos(data):
-    # Comentario del análisi del dataset
-    resumen, total_ini, total_fin, cambio_total = calcular_estadisticas(data)
-
     st.write("""
-    ## Evolución en el tiempo de de alumnos con discapacidades matriculados en la UdeA
+    ## Análisis de los Datos de Discapacidad Estudiantil
 
     En la Universidad de Antioquia, estamos comprometidos con la inclusión y el apoyo a todos nuestros estudiantes. El análisis de los datos de matriculación de estudiantes con discapacidades a lo largo de los años nos ofrece una visión valiosa sobre nuestro progreso y las áreas en las que aún podemos mejorar.
 
-    ### Progreso a Través de los Años
-    Desde el inicio del registro hasta la fecha, el total de estudiantes matriculados con discapacidad ha aumentado de {} a {}, lo que representa un cambio positivo del {:.2f}%. Este aumento demuestra el impacto de nuestras políticas inclusivas y el éxito de nuestros programas de apoyo.
-    """.format(total_ini, total_fin, cambio_total))
+    A continuación, se presenta un resumen de los cambios en la matrícula de estudiantes con diferentes tipos de discapacidad a lo largo de los años:
+    """)
 
-    for discapacidad, valores in resumen.items():
-        st.write("""
-        En el caso de los estudiantes con {}, hemos visto un cambio del {:.2f}%, pasando de {} estudiantes a {}.
-        """.format(discapacidad, valores['cambio'], valores['total_inicial'], valores['total_final']))
+    estadisticas = calcular_estadisticas(data)
+    st.table(estadisticas)
 
     st.write("""
     ### Nuestro Compromiso Continuo
@@ -56,9 +58,13 @@ def analisis_datos(data):
 
     ### Llamado a la Acción
     Te invitamos a unirte a nosotros en este esfuerzo. Tu apoyo y participación son cruciales para construir una comunidad académica más inclusiva.
-
-    A continuación, presentamos un desglose detallado de los datos de discapacidad estudiantil a lo largo de los años, reflejando nuestro camino hacia un futuro más inclusivo.
     """)
+
+def pagina_acceso():
+    data = cargar_datos()
+    st.title("Tablero de Datos de Discapacidad Estudiantil")
+
+    analisis_datos(data)
 
 def crear_grafico_baja_vision(data):
     # Gráfico de alta contraste para 'Baja Visión'
