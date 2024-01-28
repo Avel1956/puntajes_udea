@@ -47,7 +47,7 @@ def analisis_datos(data):
 
     for discapacidad, valores in resumen.items():
         st.write("""
-        En el caso de los estudiantes con {}, hemos visto un cambio del {:.2f}%, pasando de {} estudiantes a {}. Esto refleja nuestro compromiso continuo con la inclusión y el apoyo a esta comunidad.
+        En el caso de los estudiantes con {}, hemos visto un cambio del {:.2f}%, pasando de {} estudiantes a {}.
         """.format(discapacidad, valores['cambio'], valores['total_inicial'], valores['total_final']))
 
     st.write("""
