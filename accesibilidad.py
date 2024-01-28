@@ -105,22 +105,6 @@ def crear_grafico(data, column_name, plot_type):
     # Other plot types can be added as needed
     return personalizar_grafico(fig)
 
-def crear_grafico(data, column_name, plot_type):
-    # Create the graph based on the plot_type
-    if plot_type == 'bar':
-        fig = px.bar(data, x='SEMESTRE', y=column_name, color=column_name)
-    elif plot_type == 'line':
-        fig = px.line(data, x='SEMESTRE', y=column_name, markers=True)
-    elif plot_type == 'area':
-        fig = px.area(data, x='SEMESTRE', y=column_name)
-    elif plot_type == 'pie':
-        fig = px.pie(data, values=column_name, names='SEMESTRE')
-    elif plot_type == 'scatter':
-        fig = px.scatter(data, x='SEMESTRE', y=column_name, size=column_name, size_max=15)
-    # Personalize the graph with consistent styling
-    fig = personalizar_grafico(fig)
-    return fig
-
 def pagina_acceso():
     data = cargar_datos()
     st.title("Tablero de Datos de Discapacidad Estudiantil")
@@ -133,10 +117,9 @@ def pagina_acceso():
         'COMPROMISO MIEMBROS INFERIORES': 'area',
         'SORDO': 'pie',
         'SORDO ORALIZADO': 'scatter',
-        # Continue adding disabilities and plot types
+        # Add other disabilities and their corresponding plot types here
     }
 
-    # Generate and display graphs in a two-column layout
     for i, (disability, plot_type) in enumerate(disabilities.items()):
         if i % 2 == 0:
             col1, col2 = st.columns(2)
