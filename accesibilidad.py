@@ -4,13 +4,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 def cargar_datos():
-    # Carga aquí tus datos
     data = pd.read_excel('output/access.xlsx')
+    data['SEMESTRE'] = data['SEMESTRE'].astype(str)
     return data
 
 def personalizar_grafico(fig):
-    # Personalizaciones adicionales aquí
+    fig.update_layout(font=dict(size=12), coloraxis_colorbar=dict(title="Cantidad"))
     return fig
+
 
 def calcular_estadisticas(data):
     estadisticas = []
@@ -131,46 +132,43 @@ def crear_grafico_usuario_silla_ruedas(data):
     fig.update_traces(marker_line_width=2, marker_line_color="navy")
     return personalizar_grafico(fig)
 
-def crear_grafico_ciego(data):
-    # Gráfico con patrón de textura para 'Ciego'
-    fig = go.Figure(data=[go.Bar(x=data['SEMESTRE'], y=data['CIEGO'])])
-    fig.update_traces(marker_pattern_shape="x", marker_pattern_fillmode="replace")
+def crear_grafico(data, column_name, plot_type):
+    if plot_type == 'bar':
+        fig = px.bar(data, x='SEMESTRE', y=column_name, color=column_name)
+    elif plot_type == 'line':
+        fig = px.line(data, x='SEMESTRE', y=column_name, markers=True)
+    elif plot_type == 'area':
+        fig = px.area(data, x='SEMESTRE', y=column_name)
+    elif plot_type == 'pie':
+        fig = px.pie(data, values=column_name, names='SEMESTRE')
+    elif plot_type == 'scatter':
+        fig = px.scatter(data, x='SEMESTRE', y=column_name, size=column_name, size_max=15)
+    # Other plot types can be added as needed
     return personalizar_grafico(fig)
 
 def pagina_acceso():
     data = cargar_datos()
     st.title("Tablero de Datos de Discapacidad Estudiantil")
     analisis_datos(data)
-    # Llamadas a las funciones para mostrar los gráficos
-    st.subheader("Baja Visión")
-    st.plotly_chart(crear_grafico_baja_vision(data), use_container_width=True)
 
-    st.subheader("Compromiso de Miembros Superiores")
-    st.plotly_chart(crear_grafico_miembros_superiores(data), use_container_width=True)
+    # Define the types of graphs for each disability
+    disabilities = {
+        'BAJA VISIÓN': 'bar',
+        'COMPROMISO MIEMBROS SUPERIORES': 'line',
+        'COMPROMISO MIEMBROS INFERIORES': 'area',
+        'SORDO': 'pie',
+        'SORDO ORALIZADO': 'scatter',
+        # Add other disabilities and their corresponding plot types here
+    }
 
-    st.subheader("Compromiso de Miembros Inferiores")
-    st.plotly_chart(crear_grafico_miembros_inferiores(data), use_container_width=True)
+    for i, (disability, plot_type) in enumerate(disabilities.items()):
+        if i % 2 == 0:
+            col1, col2 = st.columns(2)
+        with col1 if i % 2 == 0 else col2:
+            st.subheader(disability)
+            st.plotly_chart(crear_grafico(data, disability, plot_type), use_container_width=True)
 
-    st.subheader("Sordo")
-    st.plotly_chart(crear_grafico_sordo(data), use_container_width=True)
-
-    st.subheader("Sordo Oralizado")
-    st.plotly_chart(crear_grafico_sordo_oralizado(data), use_container_width=True)
-
-    st.subheader("Sordoceguera")
-    st.plotly_chart(crear_grafico_sordoceguera(data), use_container_width=True)
-
-    st.subheader("Talla Baja")
-    st.plotly_chart(crear_grafico_talla_baja(data), use_container_width=True)
-
-    st.subheader("Con Hipoacusia")
-    st.plotly_chart(crear_grafico_hipoacusia(data), use_container_width=True)
-
-    st.subheader("Usuario de Silla de Ruedas")
-    st.plotly_chart(crear_grafico_usuario_silla_ruedas(data), use_container_width=True)
-
-    st.subheader("Ciego")
-    st.plotly_chart(crear_grafico_ciego(data), use_container_width=True)
+pagina_acceso()
 
 
 
