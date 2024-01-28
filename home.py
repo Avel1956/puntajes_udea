@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 from puntajes_udea import show_puntajes_udea_page
 from saber_pro_udea import show_saberpro_udea_page
 from accesibilidad import pagina_acceso
@@ -26,14 +27,25 @@ website_url = "https://www.nataliarectora.com/"
 
 image_path = "https://github.com/Avel1956/puntajes_udea/blob/main/images/nrect.png"
 
+def imagen_sidebar():
+    with open("images/nrect.png", "rb") as f:
+        data = base64.b64encode(f.read()).decode("utf-8")
 
-link = f'<a href="{website_url}" target="_blank"><img src="{image_path}" alt="Natalia rectoría" style="width:100%;"></a>'
+        st.sidebar.markdown(
+            f"""
+            <div style="display:table;margin-top:-20%;margin-left:20%;">
+                <img src="data:image/png;base64,{data}" width="100">
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 
 def main():
-    st.sidebar.markdown(link, unsafe_allow_html=True)
+    imagen_sidebar()
     st.sidebar.title("Navegación")
+
     page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA", "Accesibilidad UdeA"])
 
     if page == "Puntajes UDEA":
