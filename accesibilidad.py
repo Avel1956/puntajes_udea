@@ -37,7 +37,7 @@ def analisis_datos(data):
     resumen, total_ini, total_fin, cambio_total = calcular_estadisticas(data)
 
     st.write("""
-    ## Análisis de los Datos de Discapacidad Estudiantil
+    ## Evolución en el tiempo de de alumnos con discapacidades matriculados en la UdeA
 
     En la Universidad de Antioquia, estamos comprometidos con la inclusión y el apoyo a todos nuestros estudiantes. El análisis de los datos de matriculación de estudiantes con discapacidades a lo largo de los años nos ofrece una visión valiosa sobre nuestro progreso y las áreas en las que aún podemos mejorar.
 
@@ -116,7 +116,7 @@ def crear_grafico_ciego(data):
 def pagina_acceso():
     data = cargar_datos()
     st.title("Tablero de Datos de Discapacidad Estudiantil")
-
+    analisis_datos(data)
     # Llamadas a las funciones para mostrar los gráficos
     st.subheader("Baja Visión")
     st.plotly_chart(crear_grafico_baja_vision(data), use_container_width=True)
