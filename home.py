@@ -1,7 +1,7 @@
 import streamlit as st
 from puntajes_udea import show_puntajes_udea_page
 from saber_pro_udea import show_saberpro_udea_page
-from accesibilidad import access_page
+from accesibilidad import pagina_acceso
 
 st.set_page_config(
     page_title="UdeA Dashboard",
@@ -41,7 +41,7 @@ def main():
     elif page == "Saber Pro UdeA":
         show_saberpro_udea_page()
     elif page == "Accesibilidad UdeA":
-        access_page()
+        pagina_acceso()
         # Call other page functions
         pass
 
