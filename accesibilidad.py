@@ -42,7 +42,7 @@ def calcular_estadisticas(data):
         if total_estudiantes_final == 0:
             cambio_total = "Sin Cambio"
         else:
-            cambio_total = "Incremento Significativo"
+            cambio_total = "Nuevo grupo"
     else:
         cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
         cambio_total = round(cambio_total, 2)
