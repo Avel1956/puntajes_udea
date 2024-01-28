@@ -24,7 +24,7 @@ text_color = "#262730"
 website_url = "https://www.nataliarectora.com/"
 
 
-image_path = "images/nrect.png"
+image_path = "https://github.com/Avel1956/puntajes_udea/blob/main/images/nrect.png"
 
 
 link = f'<a href="{website_url}" target="_blank"><img src="{image_path}" alt="Natalia rectoría" style="width:100%;"></a>'
