@@ -1,6 +1,7 @@
 import streamlit as st
 from puntajes_udea import show_puntajes_udea_page
 from saber_pro_udea import show_saberpro_udea_page
+from accesibilidad import access_page
 
 st.set_page_config(
     page_title="UdeA Dashboard",
@@ -23,7 +24,7 @@ text_color = "#262730"
 website_url = "https://www.nataliarectora.com/"
 
 
-image_path = "images/nrect.png"
+image_path = "images\\nrect.png"
 
 
 link = f'<a href="{website_url}" target="_blank"><img src="{image_path}" alt="Natalia rectoría" style="width:100%;"></a>'
@@ -33,12 +34,14 @@ link = f'<a href="{website_url}" target="_blank"><img src="{image_path}" alt="Na
 def main():
     st.sidebar.markdown(link, unsafe_allow_html=True)
     st.sidebar.title("Navegación")
-    page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA"])
+    page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA", "Accesibilidad UdeA"])
 
     if page == "Puntajes UDEA":
         show_puntajes_udea_page()
     elif page == "Saber Pro UdeA":
         show_saberpro_udea_page()
+    elif page == "Accesibilidad UdeA":
+        access_page()
         # Call other page functions
         pass
 
