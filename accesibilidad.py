@@ -13,29 +13,39 @@ def personalizar_grafico(fig):
     return fig
 
 def calcular_estadisticas(data):
-    # Calculando estadísticas clave
     estadisticas = []
     for columna in data.columns[1:-1]:  # Excluyendo 'SEMESTRE' y 'TOTAL'
         total_inicial = data[columna].iloc[0]
         total_final = data[columna].iloc[-1]
-        cambio = ((total_final - total_inicial) / total_inicial) * 100
+
+        # Manejar la posibilidad de división por cero
+        if total_inicial == 0:
+            cambio = "N/A" if total_final == 0 else "Inf"
+        else:
+            cambio = ((total_final - total_inicial) / total_inicial) * 100
+            cambio = round(cambio, 2)
 
         estadisticas.append({
             'Discapacidad': columna,
             'Total Inicial': total_inicial,
             'Total Final': total_final,
-            'Cambio (%)': round(cambio, 2)
+            'Cambio (%)': cambio
         })
 
     total_estudiantes_inicial = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[0]
     total_estudiantes_final = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[-1]
-    cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
+    
+    if total_estudiantes_inicial == 0:
+        cambio_total = "N/A" if total_estudiantes_final == 0 else "Inf"
+    else:
+        cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
+        cambio_total = round(cambio_total, 2)
 
     estadisticas.append({
         'Discapacidad': 'Total Estudiantes con Discapacidad',
         'Total Inicial': total_estudiantes_inicial,
         'Total Final': total_estudiantes_final,
-        'Cambio (%)': round(cambio_total, 2)
+        'Cambio (%)': cambio_total
     })
 
     return pd.DataFrame(estadisticas)
