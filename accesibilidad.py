@@ -18,9 +18,12 @@ def calcular_estadisticas(data):
         total_inicial = data[columna].iloc[0]
         total_final = data[columna].iloc[-1]
 
-        # Manejar la posibilidad de división por cero
+        # Manejar la posibilidad de división por cero y resultados infinitos
         if total_inicial == 0:
-            cambio = "N/A" if total_final == 0 else "Inf"
+            if total_final == 0:
+                cambio = "Sin Cambio"
+            else:
+                cambio = "Incremento Significativo"
         else:
             cambio = ((total_final - total_inicial) / total_inicial) * 100
             cambio = round(cambio, 2)
@@ -36,7 +39,10 @@ def calcular_estadisticas(data):
     total_estudiantes_final = data['TOTAL de Estudiantes matriculados con discapacidad'].iloc[-1]
     
     if total_estudiantes_inicial == 0:
-        cambio_total = "N/A" if total_estudiantes_final == 0 else "Inf"
+        if total_estudiantes_final == 0:
+            cambio_total = "Sin Cambio"
+        else:
+            cambio_total = "Incremento Significativo"
     else:
         cambio_total = ((total_estudiantes_final - total_estudiantes_inicial) / total_estudiantes_inicial) * 100
         cambio_total = round(cambio_total, 2)
@@ -49,6 +55,9 @@ def calcular_estadisticas(data):
     })
 
     return pd.DataFrame(estadisticas)
+
+# El resto del script permanece igual...
+
 
 def analisis_datos(data):
     st.write("""
