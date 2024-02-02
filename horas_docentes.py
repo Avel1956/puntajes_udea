@@ -51,27 +51,28 @@ def show_horas_docente_page():
         regulares_ocasionales_filtrado = regulares_ocasionales_df
 
     # Graficar la evolución del número de contratos y planes, y las horas totales
-    def graficar_evolucion(df, columnas, titulo):
-        for columna in columnas:
-            fig = px.line(df, x='Fecha', y=columna, title=f"{titulo}: {columna}", markers=True)
-            fig = customize_chart(fig)
-            st.plotly_chart(fig)
+    def graficar_evolucion(df, columna, titulo):
+        fig = px.line(df, x='Fecha', y=columna, title=f"{titulo} - {columna}", labels={"Fecha": "Fecha", columna: columna}, markers=True)
+        fig = customize_chart(fig)
+        st.plotly_chart(fig)
 
     # Calcular y mostrar estadísticas
     def mostrar_estadisticas(df, columna):
         if not df.empty:
-            tasa_cambio = df[columna].pct_change().mean() * 100
-            st.write(f"Tasa media de cambio para {columna}: {tasa_cambio:.2f}%")
+            df['Tasa de cambio'] = df[columna].pct_change()
+            tasa_cambio_promedio = df['Tasa de cambio'].mean() * 100
+            st.write(f"Tasa media de cambio para {columna}: {tasa_cambio_promedio:.2f}%")
 
     # Evolución para cátedra
-    graficar_evolucion(catedra_filtrado, ['Nro contratos', 'Total horas'], "Cátedra")
+    graficar_evolucion(catedra_filtrado, 'Nro contratos', f"Evolución del número de contratos (Cátedra) - {facultad_seleccionada}")
+    graficar_evolucion(catedra_filtrado, 'Total horas', f"Evolución de las horas totales (Cátedra) - {facultad_seleccionada}")
     mostrar_estadisticas(catedra_filtrado, 'Nro contratos')
     mostrar_estadisticas(catedra_filtrado, 'Total horas')
 
     # Evolución para regulares y ocasionales
-    graficar_evolucion(regulares_ocasionales_filtrado, ['Nro planes', 'Total horas'], "Regulares y Ocasionales")
+    graficar_evolucion(regulares_ocasionales_filtrado, 'Nro planes', f"Evolución del número de planes (Regulares y Ocasionales) - {facultad_seleccionada}")
+    graficar_evolucion(regulares_ocasionales_filtrado, 'Total horas', f"Evolución de las horas totales (Regulares y Ocasionales) - {facultad_seleccionada}")
     mostrar_estadisticas(regulares_ocasionales_filtrado, 'Nro planes')
     mostrar_estadisticas(regulares_ocasionales_filtrado, 'Total horas')
 
-# No olvides llamar a la función show_horas_docente_page() donde corresponda en tu aplicación Streamlit.
 
