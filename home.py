@@ -3,6 +3,7 @@ import base64
 from puntajes_udea import show_puntajes_udea_page
 from saber_pro_udea import show_saberpro_udea_page
 from accesibilidad import pagina_acceso
+from horas_docentes import show_horas_docente_page
 
 st.set_page_config(
     page_title="UdeA Dashboard",
@@ -46,7 +47,7 @@ def main():
     imagen_sidebar()
     st.sidebar.title("Navegación")
 
-    page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA", "Accesibilidad UdeA"])
+    page = st.sidebar.selectbox("Seleccione página", ["Puntajes UDEA", "Saber Pro UdeA", "Accesibilidad UdeA", "Horas docencia UdeA"])
 
     if page == "Puntajes UDEA":
         show_puntajes_udea_page()
@@ -54,6 +55,8 @@ def main():
         show_saberpro_udea_page()
     elif page == "Accesibilidad UdeA":
         pagina_acceso()
+    elif page == "Horas docencia UdeA":
+        show_horas_docente_page()
         # Call other page functions
         pass
 
