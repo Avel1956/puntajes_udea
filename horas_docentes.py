@@ -26,12 +26,14 @@ def show_horas_docente_page():
         catedra_df = pd.read_excel("output/Horas_catedra.xlsx")
         regulares_ocasionales_df = pd.read_excel("output/Horas_regulares_ocasionales.xlsx")
 
+        # Unificar el formato de las fechas
+        catedra_df['Fecha'] = pd.to_datetime(catedra_df['año'].astype(str) + catedra_df['periodo'].astype(str) + '01', format='%Y%m%d')
+        regulares_ocasionales_df['Fecha'] = pd.to_datetime((regulares_ocasionales_df['Semestre'] // 10).astype(str) + ((regulares_ocasionales_df['Semestre'] % 10)*10).astype(str) + '01', format='%Y%m%d')
+
         # Preprocesar datos de cátedra
-        catedra_df['Fecha'] = pd.to_datetime(catedra_df['año'].astype(str) + '0' + catedra_df['periodo'].astype(str), format='%Y%m')
         catedra_df = catedra_df[['Fecha', 'Nombre fac', 'Nro contratos', 'Total horas']]
 
         # Preprocesar datos de regulares y ocasionales
-        regulares_ocasionales_df['Fecha'] = pd.to_datetime((regulares_ocasionales_df['Semestre'] // 10).astype(str) + ((regulares_ocasionales_df['Semestre'] % 10)*6).astype(str), format='%Y%m')
         regulares_ocasionales_df = regulares_ocasionales_df[['Fecha', 'Nombre fac', 'Nro planes', 'Total horas']]
 
         return catedra_df, regulares_ocasionales_df
