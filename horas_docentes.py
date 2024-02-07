@@ -62,9 +62,9 @@ def show_horas_docente_page():
     # Calcular y mostrar estadísticas
     def mostrar_estadisticas(df, columna):
         if not df.empty:
-            df['Tasa de cambio'] = df[columna].pct_change()
-            tasa_cambio_promedio = df['Tasa de cambio'].mean() * 100
-            st.write(f"Tasa media de cambio para {columna}: {tasa_cambio_promedio:.2f}%")
+            cambio = (df[columna].iloc[-1] - df[columna].iloc[0]) / df[columna].iloc[0] * 100
+            st.write(f"Cambio porcentual del primer al último periodo para {columna}: {cambio:.2f}%")
+
 
     # Evolución para cátedra
     graficar_evolucion(catedra_filtrado, 'Nro contratos', f"Evolución del número de contratos (Cátedra) - {facultad_seleccionada}")
